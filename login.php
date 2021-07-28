@@ -48,6 +48,11 @@
 	?>
 
 	function onSubmitOfLoginForm(/*HTMLFormElement*/ theForm){
+		 if (grecaptcha.getResponse() == "")
+		 {
+		      alert("Você não clicou no reCAPTCHA, por favor, faça!")
+		      return false;
+		 }
 		try{
 			if(lValidateInput == "TRUE"){
 				var lUnsafeCharacters = /[`~!@#$%^&*()-_=+\[\]{}\\|;':",./<>?]/;
@@ -77,8 +82,12 @@
 <?php include_once (__ROOT__.'/includes/back-button.inc');?>
 <?php include_once (__ROOT__.'/includes/hints/hints-menu-wrapper.inc'); ?>
 
+
+<script src='https://www.google.com/recaptcha/api.js'></script>
+
+
 <div id="id-log-in-form-div" style="display: none; text-align:center;">
-	<form 	action="index.php?page=login.php"
+	<form 		action="index.php?page=login.php"
 			method="post" 
 			enctype="application/x-www-form-urlencoded" 
 			onsubmit="return onSubmitOfLoginForm(this);"
@@ -121,6 +130,7 @@
 			<tr>
 				<td colspan="2" style="text-align:center;">
 					<input name="login-php-submit-button" class="button" type="submit" value="Login" />
+					<div class="g-recaptcha" data-sitekey="6LdfCcgbAAAAAELHLLjondEf2HzOE1e9MUqcW_EA"></div>
 				</td>
 			</tr>
 			<tr><td></td></tr>
@@ -132,6 +142,8 @@
 		</table>
 	</form>
 </div>
+
+
 
 <div id="id-log-out-div" style="text-align: center; display: none;">
 	<table>
