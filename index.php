@@ -26,6 +26,12 @@
 	if (!isset($_SESSION["security-level"])){
 	    $_SESSION["security-level"] = 0;
 	}// end if
+	
+	//Nosso SSL
+    	if(!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS']!="on"){
+    		print("Acesso Negado, por favor utilize HTTP!");
+    		exit();
+    	}//end if
 
     /* ----------------------------------------------------
      * ENFORCE SSL
