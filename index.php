@@ -218,8 +218,16 @@
 	/* ------------------------------------------
 	* PROCESS LOGIN ATTEMPT (IF ANY)
 	* ------------------------------------------ */
-	if (isset($_POST["login-php-submit-button"])){
-		include_once(__ROOT__.'/includes/process-login-attempt.php');
+	if (isset($_POST["login-php-submit-button"]) && isset($_POST["g-recaptcha-response"])){
+		$captcha_data = $_POST['g-recaptcha-response'];
+		$resposta = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=6LdfCcgbAAAAANkNEXD2WHQUBvdq3Cn9xMspNvd5&response=".$captcha_data."&remoteip=".$_SERVER['REMOTE_ADDR']);
+		$resposta = json_decode($resposta);
+		if ($resposta->success) {
+		    include_once(__ROOT__.'/includes/process-login-attempt.php');
+		} else {
+		    echo "Usuário mal intencionado detectado.";
+		    exit;
+		}
 	}// end if
 
 	/* ------------------------------------------
@@ -411,8 +419,23 @@
 		case ".htaccess":
 		case ".htaccess.php":
 		case "secret.php":
-   		case "admin.php":		case "_adm.php":		case "_admin.php":		case "root.php":		case "administrator.php":
-		case "auth.php":		case "hidden.php":		case "console.php":		case "conf.php":		case "_private.php":		case "private.php":		case "access.php":		case "control.php":		case "control-panel.php":		case "bash_history":		case ".history":		case ".htpasswd":
+   		case "admin.php":
+		case "_adm.php":
+		case "_admin.php":
+		case "root.php":
+		case "administrator.php":
+		case "auth.php":
+		case "hidden.php":
+		case "console.php":
+		case "conf.php":
+		case "_private.php":
+		case "private.php":
+		case "access.php":
+		case "control.php":
+		case "control-panel.php":
+		case "bash_history":
+		case ".history":
+		case ".htpasswd":
 		case ".htpasswd.php":
 
    			switch ($_SESSION["security-level"]){
