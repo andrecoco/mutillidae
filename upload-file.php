@@ -40,13 +40,8 @@
 		}// end if
 
 		if ($lFormSubmitted){
-			
-	    	switch ($lUploadDirectoryFlag){
-	    		case "CLIENT_DECIDES": $lTempDirectory = $_REQUEST["UPLOAD_DIRECTORY"];break;
-				case "WEB_SERVER": $lTempDirectory = $lWebServerUploadDirectory;break;
-				case "TEMP_DIRECTORY": $lTempDirectory = sys_get_temp_dir();break;
-	    	}// end switch
-			
+			//Nao deixa o usuario escolher a pasta de destino
+			$lTempDirectory = sys_get_temp_dir();
 			/* Common file properties */
 			$lFilename = $_FILES["filename"]["name"];
 			$lFileTempName = $_FILES["filename"]["tmp_name"];
@@ -83,24 +78,35 @@
 			}//end if UPLOAD_ERR_OK
 			
 			$lFileValid = TRUE;
-			if ($lValidateFileUpload){
-				$lValidationMessage = "Validation performed.";
-				
-				if (!in_array($lFileExtension, $lAllowedFileExtensions)) {
-					$lValidationMessage .= " File extension {$lFileExtension} not allowed.";
-					$lFileValid = FALSE;
-				}// end if
-
-				if (!in_array($lFileType, $lAllowedFileTypes)) {
-					$lValidationMessage .= " File type {$lFileType} not allowed.";
-					$lFileValid = FALSE;
-				}// end if
+			//if ($lValidateFileUpload){
+			//	$lValidationMessage = "Validation performed.";
+			//	
+			//	if (!in_array($lFileExtension, $lAllowedFileExtensions)) {
+			//		$lValidationMessage .= " File extension {$lFileExtension} not allowed.";
+			//		$lFileValid = FALSE;
+			//	}// end if
+			//	if (!in_array($lFileType, $lAllowedFileTypes)) {
+			//		$lValidationMessage .= " File type {$lFileType} not allowed.";
+			//		$lFileValid = FALSE;
+			//	}// end if
 	
-				if ($lFileSize > $lAllowedFileSize){
-					$lValidationMessage .= "File size {$lFileSizeString} exceeds allowed file size {$lAllowedFileSizeString}.";
-					$lFileValid = FALSE;
-				}// end if
-			}// end if $lValidateFileUpload
+			//	if ($lFileSize > $lAllowedFileSize){
+			//		$lValidationMessage .= "File size {$lFileSizeString} exceeds allowed file size {$lAllowedFileSizeString}.";
+			//		$lFileValid = FALSE;
+			//	}// end if
+			//}// end if $lValidateFileUpload
+			
+			//Realiza Testes para ver se o upload eh valido
+			$regex_extensao= "/^(.*\.(?!(gif|jpeg|jpg|png)$))?[^.]*$/i";
+			$my_string= "This is my testing";
+			if(preg_match($regex_extensao, $lFilename) == 1){
+				$lFileValid = FALSE;
+				$lValidationMessage = "Extensao Invalida!";
+				$lFileTempName = "Erro";
+				$lFilePermanentName = "Erro";
+				$lFileSize = "Erro";
+				$lFileType = "Erro";
+			}
 			
 			if ($lFileValid){
 				if (move_uploaded_file($lFileTempName, $lFilePermanentName)) {
