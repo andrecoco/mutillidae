@@ -347,10 +347,9 @@ class SQLQueryHandler {
 
 		$lQueryString =
 			"SELECT * FROM accounts
-			WHERE username='".$pUsername.
-			"' AND password='".$pPassword."'";
-
-		return $this->mMySQLHandler->executeQuery($lQueryString);
+			WHERE username=? AND password=?";
+			
+		return $this->mMySQLHandler->executeQuery_parametrizada($lQueryString, $pUsername, $pPassword);
 	}//end public function getUserAccount
 
 	/* -----------------------------------------
