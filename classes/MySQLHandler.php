@@ -235,7 +235,23 @@ class MySQLHandler {
 		}// end function
 
 	}// end private function executeQuery
-
+	
+	private function doExecuteQuery_parametrizada($pQueryString, $pUsername, $pPassword){
+		try{
+			$novo_sql = $this->mMySQLConnection->prepare($pQueryString);
+			$novo_sql->bind_param("ss", $pUsername, $pPassword); // "is" means that $id is bound as an integer and $label as a string
+			$novo_sql->execute();
+			$resultados = $novo_sql->get_result();
+			if (!$resultados) {
+		    		throw (new Exception("Error executing query: ".$this->serializeMySQLImprovedObjectProperties().")"));
+		    	}
+		    	return $resultados;
+		} catch (Exception $e) {
+			throw(new Exception($this->mCustomErrorHandler->getExceptionMessage($e, "Query: " . $this->Encoder->encodeForHTML($pQueryString))));
+		}
+		
+	}// end private function doExecuteQuery_parametrizada
+	
 	/* ------------------------------------------
  	 * PUBLIC METHODS
  	 * ------------------------------------------ */
@@ -324,6 +340,10 @@ class MySQLHandler {
 		return $this->doExecuteQuery($pQueryString);
 	}// end public function executeQuery
 
+	public function executeQuery_parametrizada($pQueryString, $pUsername, $pPassword){
+		return $this->doExecuteQuery_parametrizada($pQueryString, $pUsername, $pPassword);
+	}
+	
 	public function closeDatabaseConnection(){
 		$this->doCloseDatabaseConnection();
 	}// end public function closeDatabaseConnection
